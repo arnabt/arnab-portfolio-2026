@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arnab Tagore | Data & AI Leadership</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --navy: #0F2340;
+            --navy-mid: #1B3A6B;
+            --gold: #C4944E;
+            --gold-light: #D4A574;
+            --sky: #7DB3D1;
+            --text: #2C3E50;
+            --text-muted: #6B7B8D;
+            --warm-white: #FAF9F6;
+            --cream: #F3F0EA;
+            --border: #E0DAD0;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.7;
+            color: var(--text);
+            background: var(--warm-white);
+        }
+
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 2.5rem; }
+
+        /* ── Header ── */
+        header {
+            background: var(--navy);
+            padding: 1.2rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: 1.6rem;
+            font-weight: 400;
+            color: #fff;
+            letter-spacing: 0.5px;
+        }
+
+        .logo span { color: var(--gold); }
+
+        nav ul { list-style: none; display: flex; gap: 2.2rem; }
+
+        nav a {
+            color: rgba(255,255,255,0.75);
+            text-decoration: none;
+            font-size: 0.88rem;
+            font-weight: 400;
+            letter-spacing: 0.3px;
+            transition: color 0.3s;
+            text-transform: uppercase;
+        }
+
+        nav a:hover { color: var(--gold-light); }
+
+        /* ── Hero ── */
+        .hero {
+            background: linear-gradient(175deg, var(--navy) 0%, var(--navy-mid) 100%);
+            padding: 7rem 2.5rem 6rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--gold-light), transparent);
+        }
+
+        .hero .container { position: relative; z-index: 1; }
+
+        .hero-eyebrow {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--gold);
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+        }
+
+        .hero h1 {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: 3.8rem;
+            color: #fff;
+            line-height: 1.15;
+            font-weight: 300;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.5px;
+        }
+
+        .hero .tagline {
+            font-size: 1.1rem;
+            color: rgba(255,255,255,0.75);
+            max-width: 640px;
+            margin: 0 auto 2.5rem;
+            font-weight: 300;
+            line-height: 1.8;
+        }
+
+        .cta-group { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+        .btn {
+            padding: 0.85rem 2.2rem;
+            border: none;
+            border-radius: 3px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            letter-spacing: 0.3px;
+        }
+
+        .btn-gold {
+            background: var(--gold);
+            color: #fff;
+        }
+
+        .btn-gold:hover {
+            background: #B8873F;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(196,148,78,0.3);
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: rgba(255,255,255,0.8);
+            border: 1.5px solid rgba(255,255,255,0.25);
+        }
+
+        .btn-ghost:hover {
+            border-color: var(--gold-light);
+            color: var(--gold-light);
+        }
+
+        /* ── Section base ── */
+        .section { padding: 5rem 0; }
+        .section--cream { background: var(--cream); }
+        .section--white { background: var(--warm-white); }
+        .section--dark {
+            background: linear-gradient(175deg, var(--navy) 0%, var(--navy-mid) 100%);
+            color: #fff;
+        }
+
+        .section-title {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: 2.4rem;
+            font-weight: 400;
+            text-align: center;
+            margin-bottom: 0.5rem;
+            color: var(--navy);
+            letter-spacing: -0.3px;
+        }
+
+        .section--dark .section-title { color: #fff; }
+
+        .section-rule {
+            width: 60px;
+            height: 2px;
+            background: var(--gold);
+            margin: 0 auto 3.5rem;
+        }
+
+        /* ── About ── */
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 4rem;
+            align-items: start;
+        }
+
+        .about-text h3 {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: 1.6rem;
+            font-weight: 400;
+            color: var(--navy);
+            margin-bottom: 1.2rem;
+        }
+
+        .about-text p {
+            color: var(--text-muted);
+            margin-bottom: 1.2rem;
+            font-size: 0.95rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .stat {
+            text-align: center;
+            padding: 1.8rem 1rem;
+            background: var(--warm-white);
+            border-radius: 6px;
+        }
+
+        .stat-number {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: 2.8rem;
+            font-weight: 400;
+            color: var(--gold);
+            line-height: 1;
+        }
+
+        .stat-label {
+            color: var(--text-muted);
+            font-size: 0.82rem;
+            margin-top: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* ── Work Cards ── */
+        .work-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+
+        .work-card {
+            background: #fff;
+            padding: 2rem;
+            border-radius: 6px;
+            border-top: 3px solid var(--gold);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .work-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(15,35,64,0.1);
+        }
+
+        .work-card h3 {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--navy);
+            margin-bottom: 0.8rem;
+        }
+
+        .work-card p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            line-height: 1.7;
+        }
+
+        .tags { margin-top: 1.2rem; }
+
+        .tag {
+            display: inline-block;
+            background: rgba(196,148,78,0.08);
+            color: var(--navy-mid);
+            padding: 0.3rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            margin: 0.25rem 0.3rem 0.25rem 0;
+            border: 1px solid rgba(196,148,78,0.2);
+        }
+
+        /* ── Experience ── */
+        .exp-item {
+            padding: 2rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .exp-item:last-child { border-bottom: none; }
+
+        .exp-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 0.6rem;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .exp-role {
+            font-size: 1.15rem;
+            font-weight: 500;
+            color: var(--navy);
+        }
+
+        .exp-dates {
+            font-size: 0.85rem;
+            color: var(--gold);
+            font-weight: 500;
+        }
+
+        .exp-org {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .exp-desc {
+            color: var(--text-muted);
+            font-size: 0.93rem;
+        }
+
+        .exp-desc .hl {
+            color: var(--navy-mid);
+            font-weight: 600;
+        }
+
+        /* ── Skills ── */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+
+        .skill-card {
+            background: #fff;
+            padding: 1.8rem;
+            border-radius: 6px;
+            border-left: 4px solid var(--gold);
+        }
+
+        .skill-card h3 {
+            color: var(--navy);
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .skill-card ul { list-style: none; }
+
+        .skill-card li {
+            color: var(--text-muted);
+            padding: 0.35rem 0;
+            font-size: 0.88rem;
+        }
+
+        .skill-card li::before {
+            content: '\2192\00a0';
+            color: var(--sky);
+        }
+
+        /* ── Blog ── */
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+
+        .blog-card {
+            background: #fff;
+            border-radius: 6px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .blog-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 28px rgba(15,35,64,0.1);
+        }
+
+        .blog-body { padding: 2rem; }
+
+        .blog-label {
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--gold);
+            font-weight: 600;
+        }
+
+        .blog-card h3 {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            color: var(--navy);
+            margin: 0.6rem 0;
+            font-size: 1.3rem;
+            line-height: 1.35;
+            font-weight: 500;
+        }
+
+        .blog-card p {
+            color: var(--text-muted);
+            font-size: 0.88rem;
+        }
+
+        .blog-link {
+            color: var(--gold);
+            font-weight: 500;
+            text-decoration: none;
+            font-size: 0.88rem;
+            display: inline-block;
+            margin-top: 1rem;
+            transition: color 0.2s;
+        }
+
+        .blog-link:hover { color: var(--navy-mid); }
+
+        /* ── Contact ── */
+        .section--dark .section-rule { background: var(--gold-light); }
+
+        .contact-text {
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto 2rem;
+            color: rgba(255,255,255,0.8);
+            font-size: 1.05rem;
+            font-weight: 300;
+            line-height: 1.8;
+        }
+
+        .contact-links {
+            display: flex;
+            gap: 1.2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .contact-links a {
+            color: #fff;
+            text-decoration: none;
+            padding: 0.6rem 1.8rem;
+            border: 1.5px solid rgba(255,255,255,0.25);
+            border-radius: 3px;
+            font-size: 0.88rem;
+            font-weight: 500;
+            transition: all 0.3s;
+            letter-spacing: 0.3px;
+        }
+
+        .contact-links a:hover {
+            border-color: var(--gold-light);
+            color: var(--gold-light);
+        }
+
+        /* ── Footer ── */
+        footer {
+            background: var(--navy);
+            color: rgba(255,255,255,0.5);
+            text-align: center;
+            padding: 2rem;
+            font-size: 0.82rem;
+            border-top: 1px solid rgba(196,148,78,0.15);
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 900px) {
+            .work-grid, .skills-grid, .blog-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .hero h1 { font-size: 2.4rem; }
+            .hero { padding: 4rem 1.5rem 3.5rem; }
+            .container { padding: 0 1.5rem; }
+            .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+            .work-grid, .skills-grid, .blog-grid { grid-template-columns: 1fr; }
+            nav ul { gap: 1rem; }
+            nav a { font-size: 0.78rem; }
+            .exp-header { flex-direction: column; }
+            .cta-group { flex-direction: column; align-items: center; }
+            .btn { width: 100%; max-width: 280px; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="container" style="display:flex;justify-content:space-between;align-items:center;">
+            <div class="logo">Arnab <span>Tagore</span></div>
+            <nav>
+                <ul>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#work">Work</a></li>
+                    <li><a href="#experience">Experience</a></li>
+                    <li><a href="#perspective">Perspective</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero -->
+    <div class="hero">
+        <div class="container">
+            <div class="hero-eyebrow">Data Strategy &bull; Agentic AI &bull; Enterprise Leadership</div>
+            <h1>Where Data Systems<br>Meet Intelligent Automation</h1>
+            <p class="tagline">Director-level leader with 15+ years translating enterprise data architecture and AI capabilities into production outcomes. Founder of AlethiAI. Previously led a $1.5M analytics practice at RBC.</p>
+            <div class="cta-group">
+                <a href="#contact" class="btn btn-gold">Get in Touch</a>
+                <a href="#work" class="btn btn-ghost">View Work</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- About -->
+    <div class="section section--cream" id="about">
+        <div class="container">
+            <h2 class="section-title">About</h2>
+            <div class="section-rule"></div>
+            <div class="about-grid">
+                <div class="about-text">
+                    <h3>Enterprise Data Meets Entrepreneurial AI</h3>
+                    <p>I've spent my career bridging the gap between complex technical systems and measurable business outcomes. At RBC, I built a high-performing analytics practice that served 30M+ digital interactions annually in a regulated financial environment. Then I founded AlethiAI to build patent-pending agentic AI systems at the intersection of autonomous workflows and enterprise automation.</p>
+                    <p>My sweet spot is taking platforms from concept through production deployment while maintaining 99%+ accuracy, auditability, and regulatory compliance. Whether it's designing data governance frameworks for a major bank or orchestrating multi-agent AI systems, I think in terms of operational excellence and stakeholder confidence.</p>
+                    <p>I'm currently co-building <strong>Creavity.ca</strong>, a digital agency, while exploring director-level leadership roles in the data and AI space. Based in downtown Toronto.</p>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat">
+                        <div class="stat-number">15+</div>
+                        <div class="stat-label">Years Experience</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">40+</div>
+                        <div class="stat-label">Initiatives Led</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">$1.5M</div>
+                        <div class="stat-label">Budget Managed</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">30M+</div>
+                        <div class="stat-label">Interactions Served</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Selected Work -->
+    <div class="section section--white" id="work">
+        <div class="container">
+            <h2 class="section-title">Selected Work</h2>
+            <div class="section-rule"></div>
+            <div class="work-grid">
+                <div class="work-card">
+                    <h3>AlethiAI &mdash; Agentic AI Platform</h3>
+                    <p>Patent-pending multi-agent orchestration systems. Production-grade infrastructure integrating CrewAI, LLM APIs, and RAG pipelines with 99%+ accuracy evaluation frameworks and comprehensive audit logging.</p>
+                    <div class="tags">
+                        <span class="tag">CrewAI</span>
+                        <span class="tag">RAG Pipelines</span>
+                        <span class="tag">LLM APIs</span>
+                    </div>
+                </div>
+                <div class="work-card">
+                    <h3>Enterprise Data Platform &mdash; RBC</h3>
+                    <p>End-to-end platform integrating product analytics, customer analytics, and marketing intelligence across digital channels. Real-time insights for 10+ business units in regulated financial services.</p>
+                    <div class="tags">
+                        <span class="tag">BigQuery</span>
+                        <span class="tag">Snowflake</span>
+                        <span class="tag">Real-time</span>
+                    </div>
+                </div>
+                <div class="work-card">
+                    <h3>Marketing Attribution & Modeling</h3>
+                    <p>Comprehensive measurement frameworks for ROI: multi-touch attribution, brand lift studies, incrementality testing, and marketing mix modeling. Consistent 10% YoY improvement in marketing effectiveness.</p>
+                    <div class="tags">
+                        <span class="tag">Attribution</span>
+                        <span class="tag">MMM</span>
+                        <span class="tag">Incrementality</span>
+                    </div>
+                </div>
+                <div class="work-card">
+                    <h3>Data Governance & Compliance</h3>
+                    <p>Governance frameworks ensuring data lineage, auditability, and regulatory compliance (GDPR, PCI DSS). Modernized legacy infrastructure to cloud-native architecture while maintaining performance.</p>
+                    <div class="tags">
+                        <span class="tag">GDPR</span>
+                        <span class="tag">PCI DSS</span>
+                        <span class="tag">Cloud Migration</span>
+                    </div>
+                </div>
+                <div class="work-card">
+                    <h3>Program Governance at Scale</h3>
+                    <p>40+ complex technology initiatives with cross-functional coordination across Advertising, Marketing, Product, and Technology. Governance frameworks, dependency mapping, and escalation protocols.</p>
+                    <div class="tags">
+                        <span class="tag">RAID</span>
+                        <span class="tag">Cross-functional</span>
+                        <span class="tag">Delivery</span>
+                    </div>
+                </div>
+                <div class="work-card">
+                    <h3>Team Building & Analytics Culture</h3>
+                    <p>Built and scaled a 15+ member multidisciplinary team. Trained 5,000+ stakeholders on data-driven decision-making. Established systems-thinking culture positioning analytics as strategic advantage.</p>
+                    <div class="tags">
+                        <span class="tag">Leadership</span>
+                        <span class="tag">Culture</span>
+                        <span class="tag">Enablement</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Experience -->
+    <div class="section section--cream" id="experience">
+        <div class="container">
+            <h2 class="section-title">Experience</h2>
+            <div class="section-rule"></div>
+
+            <div class="exp-item">
+                <div class="exp-header">
+                    <div class="exp-role">Founder</div>
+                    <div class="exp-dates">2025 &ndash; 2026</div>
+                </div>
+                <div class="exp-org">AlethiAI &middot; Toronto &amp; New York</div>
+                <p class="exp-desc">Built patent-pending agentic AI systems with multi-agent orchestration. Architected production-grade infrastructure integrating CrewAI, LLM APIs, and RAG pipelines with <span class="hl">99%+ accuracy</span> evaluation frameworks. Secured early-stage investor engagement for $1M Pre-Seed round.</p>
+            </div>
+
+            <div class="exp-item">
+                <div class="exp-header">
+                    <div class="exp-role">Director, Data Engineering & Digital Intelligence</div>
+                    <div class="exp-dates">2021 &ndash; 2025</div>
+                </div>
+                <div class="exp-org">RBC &middot; Toronto</div>
+                <p class="exp-desc">Led <span class="hl">15+ team members</span> and <span class="hl">$1.5M budget</span>. Architected enterprise data platform serving <span class="hl">30M+ digital interactions annually</span>. Directed 40+ technology initiatives with governance frameworks and cross-functional coordination across Advertising, Marketing, Product, and Technology.</p>
+            </div>
+
+            <div class="exp-item">
+                <div class="exp-header">
+                    <div class="exp-role">Senior Manager, Digital Analytics & Advertising Intelligence</div>
+                    <div class="exp-dates">2015 &ndash; 2021</div>
+                </div>
+                <div class="exp-org">RBC &middot; Toronto</div>
+                <p class="exp-desc">Built analytics practice for retail and wealth business units. Led enterprise delivery of marketing analytics platforms enabling <span class="hl">10% year-over-year improvement</span> in marketing ROI. Enabled 5,000+ internal stakeholders on data-driven measurement.</p>
+            </div>
+
+            <div class="exp-item">
+                <div class="exp-header">
+                    <div class="exp-role">Senior Analyst, Marketing Analytics</div>
+                    <div class="exp-dates">2013 &ndash; 2015</div>
+                </div>
+                <div class="exp-org">TD Bank Group &middot; Toronto</div>
+                <p class="exp-desc">Advanced multi-channel attribution models across Credit Cards, Insurance, and US Operations. Improved marketing investment visibility by <span class="hl">20%</span> and reduced manual reporting effort by <span class="hl">40%</span>.</p>
+            </div>
+
+            <div class="exp-item">
+                <div class="exp-header">
+                    <div class="exp-role">Senior Analyst, Digital Analytics & Insights</div>
+                    <div class="exp-dates">2011 &ndash; 2013</div>
+                </div>
+                <div class="exp-org">TELUS &middot; Toronto</div>
+                <p class="exp-desc">Established Koodo digital analytics program from the ground up. Translated behavioral insights into <span class="hl">66% improvement</span> in digital funnel conversion rates.</p>
+            </div>
+
+            <div class="exp-item">
+                <div class="exp-header">
+                    <div class="exp-role">Manager, Business Intelligence / Digital Analytics</div>
+                    <div class="exp-dates">2008 &ndash; 2011</div>
+                </div>
+                <div class="exp-org">IT World Canada &middot; Toronto</div>
+                <p class="exp-desc">Built the BI and digital analytics function from scratch. Scaled analytics capabilities to support 50+ enterprise marketing campaigns and data-driven investment forecasting.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Skills -->
+    <div class="section section--white">
+        <div class="container">
+            <h2 class="section-title">Core Capabilities</h2>
+            <div class="section-rule"></div>
+            <div class="skills-grid">
+                <div class="skill-card">
+                    <h3>Analytics & Data</h3>
+                    <ul>
+                        <li>Google Analytics &amp; Snowplow</li>
+                        <li>BigQuery &amp; Snowflake</li>
+                        <li>Data Warehousing</li>
+                        <li>Python &amp; SQL</li>
+                        <li>Data Visualization</li>
+                    </ul>
+                </div>
+                <div class="skill-card">
+                    <h3>AI & Automation</h3>
+                    <ul>
+                        <li>Agentic AI Systems</li>
+                        <li>CrewAI Orchestration</li>
+                        <li>RAG &amp; Prompt Engineering</li>
+                        <li>LLM Integration</li>
+                        <li>Python Automation</li>
+                    </ul>
+                </div>
+                <div class="skill-card">
+                    <h3>Marketing & Measurement</h3>
+                    <ul>
+                        <li>Multi-touch Attribution</li>
+                        <li>Marketing Mix Modeling</li>
+                        <li>Audience Segmentation</li>
+                        <li>Brand Lift &amp; Incrementality</li>
+                        <li>ROI Optimization</li>
+                    </ul>
+                </div>
+                <div class="skill-card">
+                    <h3>Cloud & Infrastructure</h3>
+                    <ul>
+                        <li>Google Cloud Platform</li>
+                        <li>AWS</li>
+                        <li>Apache Kafka</li>
+                        <li>ETL Pipelines</li>
+                        <li>Cloud Architecture</li>
+                    </ul>
+                </div>
+                <div class="skill-card">
+                    <h3>Leadership & Delivery</h3>
+                    <ul>
+                        <li>Team Building (15+)</li>
+                        <li>Program Governance</li>
+                        <li>Stakeholder Management</li>
+                        <li>Delivery Excellence</li>
+                        <li>Systems Thinking</li>
+                    </ul>
+                </div>
+                <div class="skill-card">
+                    <h3>Governance & Compliance</h3>
+                    <ul>
+                        <li>GDPR &amp; PCI DSS</li>
+                        <li>Data Governance</li>
+                        <li>Audit &amp; Observability</li>
+                        <li>Regulated Environments</li>
+                        <li>Risk Management</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Perspective / Blog -->
+    <div class="section section--cream" id="perspective">
+        <div class="container">
+            <h2 class="section-title">Perspective</h2>
+            <div class="section-rule"></div>
+            <div class="blog-grid">
+                <div class="blog-card">
+                    <div class="blog-body">
+                        <div class="blog-label">Coming Soon</div>
+                        <h3>Autonomous Systems That Stay Compliant</h3>
+                        <p>Lessons from deploying agentic AI in regulated financial environments. Designing for accuracy, auditability, and stakeholder confidence.</p>
+                        <a href="#" class="blog-link">Read &rarr;</a>
+                    </div>
+                </div>
+                <div class="blog-card">
+                    <div class="blog-body">
+                        <div class="blog-label">Coming Soon</div>
+                        <h3>Data Engineering at Scale: Beyond the Data Lake</h3>
+                        <p>How to architect platforms that serve 30M+ interactions annually while maintaining governance and regulatory compliance.</p>
+                        <a href="#" class="blog-link">Read &rarr;</a>
+                    </div>
+                </div>
+                <div class="blog-card">
+                    <div class="blog-body">
+                        <div class="blog-label">Coming Soon</div>
+                        <h3>The ROI Narrative: Proving Marketing Analytics Value</h3>
+                        <p>Moving beyond dashboards to measurement frameworks that drive budget allocation. Attribution, MMM, and incrementality for finance teams.</p>
+                        <a href="#" class="blog-link">Read &rarr;</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contact -->
+    <div class="section section--dark" id="contact">
+        <div class="container">
+            <h2 class="section-title">Let's Connect</h2>
+            <div class="section-rule"></div>
+            <p class="contact-text">Currently exploring director-level leadership roles in data and AI. Always open to conversations about enterprise data strategy, AI systems, or collaboration opportunities.</p>
+            <div class="contact-links">
+                <a href="mailto:arnab@arnabtagore.com">Email</a>
+                <a href="https://linkedin.com/in/arnabtagore" target="_blank" rel="noopener">LinkedIn</a>
+                <a href="https://creavity.ca" target="_blank" rel="noopener">Creavity.ca</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 Arnab Tagore. Toronto, Canada.</p>
+    </footer>
+
+</body>
+</html>
