@@ -4,10 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yogananda Teachings Quiz</title>
+    <title>Wisdom of Yogananda — A Contemplative Quiz</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link
-        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Inter:wght@300;400;500;600&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap"
         rel="stylesheet">
     <style>
         * {
@@ -18,17 +18,21 @@
 
         :root {
             --navy: #0F2340;
+            --navy-deep: #081729;
             --navy-mid: #1B3A6B;
             --gold: #C4944E;
             --gold-light: #D4A574;
+            --gold-bright: #E8C078;
             --sky: #7DB3D1;
             --text: #2C3E50;
             --text-muted: #6B7B8D;
             --warm-white: #FAF9F6;
             --cream: #F3F0EA;
+            --cream-deep: #E8E2D5;
             --border: #E0DAD0;
-            --success: #27AE60;
-            --error: #E74C3C;
+            --success: #5A9367;
+            --error: #B85450;
+            --saffron: #E89A3F;
         }
 
         html {
@@ -41,20 +45,52 @@
             color: var(--text);
             background: var(--warm-white);
             overflow-x: hidden;
+            min-height: 100vh;
         }
 
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 0 2.5rem;
+        /* Animated background gradient */
+        .bg-canvas {
+            position: fixed;
+            inset: 0;
+            z-index: -2;
+            background:
+                radial-gradient(ellipse at top left, rgba(196, 148, 78, 0.08), transparent 60%),
+                radial-gradient(ellipse at bottom right, rgba(125, 179, 209, 0.06), transparent 55%),
+                var(--warm-white);
         }
 
+        .bg-mandala {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            opacity: 0.04;
+            pointer-events: none;
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='400' viewBox='0 0 400 400'><g fill='none' stroke='%230F2340' stroke-width='0.5'><circle cx='200' cy='200' r='180'/><circle cx='200' cy='200' r='140'/><circle cx='200' cy='200' r='100'/><circle cx='200' cy='200' r='60'/><circle cx='200' cy='200' r='20'/><g><path d='M200 20 L200 380 M20 200 L380 200 M59 59 L341 341 M341 59 L59 341'/></g></g></svg>");
+            background-size: 600px 600px;
+            background-position: center;
+            animation: rotate 240s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Header */
         header {
-            background: var(--navy);
+            background: rgba(15, 35, 64, 0.97);
+            backdrop-filter: blur(8px);
             padding: 1.2rem 0;
             position: sticky;
             top: 0;
             z-index: 100;
+            border-bottom: 1px solid rgba(196, 148, 78, 0.15);
+        }
+
+        .container {
+            max-width: 880px;
+            margin: 0 auto;
+            padding: 0 2rem;
         }
 
         header .container {
@@ -65,7 +101,7 @@
 
         .logo {
             font-family: 'Cormorant Garamond', Georgia, serif;
-            font-size: 1.6rem;
+            font-size: 1.5rem;
             font-weight: 400;
             color: #fff;
             letter-spacing: 0.5px;
@@ -78,9 +114,10 @@
         .back-link {
             color: rgba(255, 255, 255, 0.75);
             text-decoration: none;
-            font-size: 0.88rem;
+            font-size: 0.85rem;
             font-weight: 400;
             transition: color 0.3s;
+            letter-spacing: 0.3px;
         }
 
         .back-link:hover {
@@ -88,193 +125,204 @@
         }
 
         main {
-            padding: 3rem 0;
-            min-height: calc(100vh - 200px);
+            padding: 3rem 0 5rem;
+            min-height: calc(100vh - 180px);
         }
 
-        .quiz-container {
+        /* Reusable card */
+        .card {
             background: #fff;
-            border-radius: 8px;
-            padding: 3rem;
-            box-shadow: 0 4px 16px rgba(15, 35, 64, 0.08);
-        }
-
-        .quiz-header {
-            text-align: center;
-            margin-bottom: 3rem;
-        }
-
-        .quiz-title {
-            font-family: 'Cormorant Garamond', Georgia, serif;
-            font-size: 2.2rem;
-            color: var(--navy);
-            margin-bottom: 0.5rem;
-            font-weight: 400;
-        }
-
-        .quiz-subtitle {
-            color: var(--text-muted);
-            font-size: 1rem;
-            font-weight: 300;
-        }
-
-        .progress-bar {
-            background: var(--cream);
-            height: 6px;
-            border-radius: 3px;
-            margin: 2rem 0;
+            border-radius: 12px;
+            box-shadow:
+                0 1px 2px rgba(15, 35, 64, 0.04),
+                0 8px 32px rgba(15, 35, 64, 0.08);
+            border: 1px solid rgba(224, 218, 208, 0.6);
             overflow: hidden;
         }
 
-        .progress-fill {
+        /* ============ WELCOME SCREEN ============ */
+        .screen {
+            animation: fadeInUp 0.6s ease both;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hidden { display: none !important; }
+
+        .welcome {
+            text-align: center;
+            padding: 4rem 3rem;
+        }
+
+        .om-symbol {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .om-symbol svg {
+            width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, var(--gold), var(--gold-light));
-            width: 0%;
-            transition: width 0.3s ease;
+            animation: gentle-pulse 4s ease-in-out infinite;
         }
 
-        .question-number {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            margin-bottom: 1.5rem;
+        @keyframes gentle-pulse {
+            0%, 100% { opacity: 0.85; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.04); }
+        }
+
+        .welcome-eyebrow {
+            font-size: 0.78rem;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 4px;
+            color: var(--gold);
+            margin-bottom: 1rem;
+            font-weight: 500;
         }
 
-        .question-text {
-            font-size: 1.3rem;
+        .welcome-title {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: 3rem;
             color: var(--navy);
-            margin-bottom: 2rem;
-            font-weight: 500;
+            line-height: 1.15;
+            font-weight: 400;
+            margin-bottom: 1rem;
+            letter-spacing: -0.5px;
+        }
+
+        .welcome-subtitle {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            font-weight: 300;
+            max-width: 540px;
+            margin: 0 auto 2.5rem;
+        }
+
+        .opening-quote {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-style: italic;
+            font-size: 1.2rem;
+            color: var(--navy-mid);
+            max-width: 580px;
+            margin: 0 auto 3rem;
+            padding: 1.5rem 2rem;
+            border-left: 2px solid var(--gold);
+            border-right: 2px solid var(--gold);
             line-height: 1.6;
         }
 
-        .options {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            margin-bottom: 2rem;
-        }
-
-        .option {
-            padding: 1.2rem 1.5rem;
-            border: 2px solid var(--border);
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.3s;
-            background: #fff;
-            text-align: left;
-            font-size: 0.95rem;
-            color: var(--text);
-        }
-
-        .option:hover:not(.disabled) {
-            border-color: var(--gold);
-            background: rgba(196, 148, 78, 0.04);
-        }
-
-        .option.selected {
-            border-color: var(--gold);
-            background: rgba(196, 148, 78, 0.1);
-            color: var(--navy);
-            font-weight: 500;
-        }
-
-        .option.correct {
-            border-color: var(--success);
-            background: rgba(39, 174, 96, 0.1);
-        }
-
-        .option.incorrect {
-            border-color: var(--error);
-            background: rgba(231, 76, 60, 0.1);
-        }
-
-        .option.disabled {
-            cursor: not-allowed;
-            opacity: 0.7;
-        }
-
-        .option-feedback {
-            display: none;
-            font-size: 0.85rem;
-            margin-top: 0.5rem;
-            font-weight: 500;
-        }
-
-        .option.correct .option-feedback,
-        .option.incorrect .option-feedback {
+        .opening-quote-attribution {
             display: block;
-        }
-
-        .option.correct .option-feedback {
-            color: var(--success);
-        }
-
-        .option.incorrect .option-feedback {
-            color: var(--error);
-        }
-
-        .explanation {
-            background: var(--cream);
-            padding: 1.5rem;
-            border-radius: 6px;
-            margin: 2rem 0;
-            border-left: 4px solid var(--gold);
-            display: none;
+            margin-top: 0.8rem;
+            font-style: normal;
+            font-size: 0.8rem;
+            font-family: 'Inter', sans-serif;
             color: var(--text-muted);
-            line-height: 1.7;
+            letter-spacing: 1px;
+            text-transform: uppercase;
         }
 
-        .explanation.show {
-            display: block;
+        .selector-section {
+            margin: 2.5rem 0;
+            text-align: left;
         }
 
-        .explanation strong {
+        .selector-label {
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        .difficulty-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.8rem;
+            max-width: 540px;
+            margin: 0 auto;
+        }
+
+        .difficulty-option {
+            padding: 1.2rem 1rem;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.25s;
+            background: var(--warm-white);
+            text-align: center;
+        }
+
+        .difficulty-option:hover {
+            border-color: var(--gold-light);
+            transform: translateY(-2px);
+        }
+
+        .difficulty-option.active {
+            border-color: var(--gold);
+            background: rgba(196, 148, 78, 0.08);
+            box-shadow: 0 6px 20px rgba(196, 148, 78, 0.15);
+        }
+
+        .difficulty-name {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: 1.2rem;
+            font-weight: 500;
             color: var(--navy);
+            margin-bottom: 0.2rem;
         }
 
-        .button-group {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-top: 2rem;
+        .difficulty-desc {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            line-height: 1.4;
         }
 
         .btn {
-            padding: 0.85rem 2.2rem;
+            padding: 1rem 2.4rem;
             border: none;
-            border-radius: 3px;
+            border-radius: 4px;
             font-size: 0.9rem;
             font-weight: 500;
             cursor: pointer;
             transition: all 0.3s;
             text-decoration: none;
             display: inline-block;
-            letter-spacing: 0.3px;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            font-family: 'Inter', sans-serif;
         }
 
         .btn-primary {
             background: var(--gold);
             color: #fff;
+            box-shadow: 0 4px 14px rgba(196, 148, 78, 0.25);
         }
 
         .btn-primary:hover:not(:disabled) {
-            background: #B8873F;
-            transform: translateY(-1px);
-            box-shadow: 0 6px 20px rgba(196, 148, 78, 0.3);
+            background: var(--gold-light);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(196, 148, 78, 0.35);
         }
 
         .btn-primary:disabled {
-            opacity: 0.5;
+            opacity: 0.4;
             cursor: not-allowed;
         }
 
         .btn-secondary {
             background: transparent;
             color: var(--navy);
-            border: 2px solid var(--border);
+            border: 1.5px solid var(--border);
         }
 
         .btn-secondary:hover {
@@ -282,203 +330,621 @@
             color: var(--gold);
         }
 
-        .results-screen {
-            text-align: center;
-            display: none;
+        .btn-large {
+            padding: 1.1rem 3rem;
+            font-size: 0.95rem;
+            margin-top: 2rem;
         }
 
-        .results-screen.show {
-            display: block;
+        /* ============ QUIZ SCREEN ============ */
+        .quiz-stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.2rem 2rem;
+            background: var(--navy);
+            color: #fff;
+            border-radius: 12px 12px 0 0;
         }
 
-        .results-screen.quiz-screen {
-            display: none;
+        .stat-block {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
         }
 
-        .score-circle {
-            width: 200px;
-            height: 200px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--gold), var(--gold-light));
-            margin: 0 auto 2rem;
+        .stat-icon {
+            width: 22px;
+            height: 22px;
+            opacity: 0.85;
+        }
+
+        .stat-info {
+            line-height: 1.2;
+        }
+
+        .stat-label-small {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            color: rgba(255, 255, 255, 0.55);
+        }
+
+        .stat-value {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: 1.4rem;
+            color: var(--gold-light);
+            font-weight: 500;
+        }
+
+        .streak-flame {
+            display: inline-block;
+            transition: transform 0.3s;
+        }
+
+        .streak-flame.active {
+            animation: flame-pulse 1.2s ease-in-out infinite;
+        }
+
+        @keyframes flame-pulse {
+            0%, 100% { transform: scale(1) rotate(-2deg); filter: drop-shadow(0 0 4px rgba(232, 154, 63, 0.4)); }
+            50% { transform: scale(1.15) rotate(2deg); filter: drop-shadow(0 0 12px rgba(232, 154, 63, 0.7)); }
+        }
+
+        .progress-bar {
+            background: rgba(255, 255, 255, 0.08);
+            height: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--gold), var(--gold-bright));
+            width: 0%;
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .quiz-body {
+            padding: 2.5rem 3rem 2rem;
+        }
+
+        .question-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .question-number {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 500;
+        }
+
+        .category-badge {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--gold);
+            font-weight: 500;
+            padding: 0.3rem 0.8rem;
+            background: rgba(196, 148, 78, 0.1);
+            border-radius: 20px;
+            border: 1px solid rgba(196, 148, 78, 0.2);
+        }
+
+        .question-text {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: 1.6rem;
+            color: var(--navy);
+            margin-bottom: 2rem;
+            font-weight: 500;
+            line-height: 1.4;
+        }
+
+        .options {
             display: flex;
             flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .option {
+            padding: 1.1rem 1.4rem;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.25s;
+            background: #fff;
+            text-align: left;
+            font-size: 0.95rem;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            position: relative;
+        }
+
+        .option-letter {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--cream);
+            color: var(--navy-mid);
+            display: flex;
             align-items: center;
             justify-content: center;
+            font-weight: 600;
+            font-size: 0.8rem;
+            flex-shrink: 0;
+            transition: all 0.25s;
+        }
+
+        .option:hover:not(.disabled) {
+            border-color: var(--gold);
+            background: rgba(196, 148, 78, 0.04);
+            transform: translateX(4px);
+        }
+
+        .option:hover:not(.disabled) .option-letter {
+            background: var(--gold);
             color: #fff;
         }
 
-        .score-number {
-            font-family: 'Cormorant Garamond', Georgia, serif;
-            font-size: 3.5rem;
-            font-weight: 400;
-            line-height: 1;
+        .option.correct {
+            border-color: var(--success);
+            background: rgba(90, 147, 103, 0.08);
+            animation: correct-flash 0.6s ease;
         }
 
-        .score-label {
-            font-size: 0.85rem;
+        .option.correct .option-letter {
+            background: var(--success);
+            color: #fff;
+        }
+
+        .option.incorrect {
+            border-color: var(--error);
+            background: rgba(184, 84, 80, 0.08);
+            animation: shake 0.5s ease;
+        }
+
+        .option.incorrect .option-letter {
+            background: var(--error);
+            color: #fff;
+        }
+
+        .option.disabled {
+            cursor: not-allowed;
+        }
+
+        .option.dimmed {
+            opacity: 0.45;
+        }
+
+        @keyframes correct-flash {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(2px) scale(1.01); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-6px); }
+            40%, 80% { transform: translateX(6px); }
+        }
+
+        .option-text {
+            flex: 1;
+        }
+
+        .feedback-banner {
+            margin-top: 1.8rem;
+            padding: 1.5rem 1.8rem;
+            border-radius: 8px;
+            display: none;
+            animation: slideIn 0.4s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .feedback-banner.show { display: block; }
+
+        .feedback-banner.correct {
+            background: rgba(90, 147, 103, 0.08);
+            border-left: 4px solid var(--success);
+        }
+
+        .feedback-banner.incorrect {
+            background: rgba(184, 84, 80, 0.06);
+            border-left: 4px solid var(--error);
+        }
+
+        .feedback-title {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: 1.3rem;
+            margin-bottom: 0.4rem;
+            font-weight: 500;
+        }
+
+        .feedback-banner.correct .feedback-title { color: var(--success); }
+        .feedback-banner.incorrect .feedback-title { color: var(--error); }
+
+        .feedback-points {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            margin-bottom: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 500;
+        }
+
+        .feedback-explanation {
+            color: var(--text);
+            font-size: 0.94rem;
+            line-height: 1.7;
+            margin-bottom: 1rem;
+        }
+
+        .feedback-quote {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-style: italic;
+            font-size: 1.05rem;
+            color: var(--navy-mid);
+            padding: 1rem 1.2rem;
+            background: rgba(255, 255, 255, 0.6);
+            border-left: 3px solid var(--gold);
+            border-radius: 0 4px 4px 0;
+            line-height: 1.5;
+        }
+
+        .feedback-quote::before { content: '"'; }
+        .feedback-quote::after { content: '"'; }
+
+        .feedback-attribution {
+            display: block;
             margin-top: 0.5rem;
+            font-style: normal;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.75rem;
+            color: var(--text-muted);
             text-transform: uppercase;
             letter-spacing: 1px;
         }
 
+        .quiz-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 3rem 2rem;
+            border-top: 1px solid var(--border);
+            margin-top: 1rem;
+        }
+
+        .points-popup {
+            position: absolute;
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: var(--gold);
+            pointer-events: none;
+            animation: float-up 1.5s ease-out forwards;
+            z-index: 50;
+        }
+
+        @keyframes float-up {
+            0% { opacity: 0; transform: translate(-50%, 0) scale(0.8); }
+            20% { opacity: 1; transform: translate(-50%, -10px) scale(1.1); }
+            100% { opacity: 0; transform: translate(-50%, -60px) scale(1); }
+        }
+
+        /* ============ RESULTS SCREEN ============ */
+        .results {
+            text-align: center;
+            padding: 3.5rem 3rem;
+        }
+
+        .results-rank-symbol {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 1.5rem;
+            position: relative;
+        }
+
+        .results-rank-symbol svg {
+            width: 100%;
+            height: 100%;
+            animation: scaleIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+        }
+
+        @keyframes scaleIn {
+            from { opacity: 0; transform: scale(0.3) rotate(-20deg); }
+            to { opacity: 1; transform: scale(1) rotate(0deg); }
+        }
+
+        .results-rank {
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            color: var(--gold);
+            margin-bottom: 0.6rem;
+            font-weight: 500;
+            animation: fadeInUp 0.6s ease 0.3s both;
+        }
+
         .results-title {
             font-family: 'Cormorant Garamond', Georgia, serif;
-            font-size: 2rem;
+            font-size: 2.6rem;
             color: var(--navy);
             margin-bottom: 1rem;
             font-weight: 400;
+            animation: fadeInUp 0.6s ease 0.5s both;
         }
 
         .results-message {
             color: var(--text-muted);
             font-size: 1.05rem;
-            margin-bottom: 2rem;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
+            margin: 0 auto 2.5rem;
+            max-width: 540px;
+            line-height: 1.7;
+            animation: fadeInUp 0.6s ease 0.7s both;
         }
 
-        .results-details {
-            background: var(--cream);
-            padding: 2rem;
-            border-radius: 6px;
-            margin: 2rem 0;
+        .results-stats {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-            text-align: left;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin: 2.5rem 0;
+            animation: fadeInUp 0.6s ease 0.9s both;
         }
 
         .results-stat {
-            text-align: center;
+            padding: 1.5rem 1rem;
+            background: var(--cream);
+            border-radius: 8px;
+            border-bottom: 3px solid var(--gold);
         }
 
         .results-stat-number {
             font-family: 'Cormorant Garamond', Georgia, serif;
-            font-size: 1.8rem;
-            color: var(--gold);
-            font-weight: 400;
+            font-size: 2rem;
+            color: var(--navy);
+            font-weight: 500;
+            line-height: 1;
         }
 
         .results-stat-label {
-            color: var(--text-muted);
-            font-size: 0.85rem;
+            font-size: 0.7rem;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-top: 0.5rem;
+            letter-spacing: 1.2px;
+            color: var(--text-muted);
+            margin-top: 0.4rem;
+            font-weight: 500;
         }
 
-        .hidden {
-            display: none;
+        .results-quote {
+            margin: 2.5rem auto;
+            max-width: 600px;
+            padding: 2rem;
+            background: linear-gradient(135deg, rgba(196, 148, 78, 0.06), rgba(125, 179, 209, 0.04));
+            border-radius: 8px;
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-style: italic;
+            font-size: 1.2rem;
+            color: var(--navy-mid);
+            line-height: 1.6;
+            position: relative;
+            animation: fadeInUp 0.6s ease 1.1s both;
+        }
+
+        .results-quote::before {
+            content: '"';
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            font-size: 5rem;
+            color: var(--gold);
+            opacity: 0.3;
+            line-height: 1;
+        }
+
+        .results-quote-attribution {
+            display: block;
+            margin-top: 1rem;
+            font-style: normal;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        .results-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+            animation: fadeInUp 0.6s ease 1.3s both;
         }
 
         footer {
             background: var(--navy);
             color: rgba(255, 255, 255, 0.5);
             text-align: center;
-            padding: 2rem;
-            font-size: 0.82rem;
+            padding: 1.8rem;
+            font-size: 0.78rem;
             border-top: 1px solid rgba(196, 148, 78, 0.15);
-            margin-top: 4rem;
         }
 
-        @media (max-width: 640px) {
-            .container {
-                padding: 0 1.5rem;
-            }
-
-            .quiz-container {
-                padding: 1.5rem;
-            }
-
-            .quiz-title {
-                font-size: 1.6rem;
-            }
-
-            .question-text {
-                font-size: 1.1rem;
-            }
-
-            .results-details {
-                grid-template-columns: 1fr;
-            }
-
-            .button-group {
-                flex-direction: column;
-            }
-
-            .btn {
-                width: 100%;
-            }
+        /* Responsive */
+        @media (max-width: 720px) {
+            .container { padding: 0 1.2rem; }
+            .welcome { padding: 2.5rem 1.5rem; }
+            .welcome-title { font-size: 2.1rem; }
+            .difficulty-grid { grid-template-columns: 1fr; }
+            .quiz-body { padding: 1.8rem 1.5rem 1rem; }
+            .quiz-stats { padding: 1rem 1.2rem; flex-wrap: wrap; gap: 0.8rem; }
+            .question-text { font-size: 1.3rem; }
+            .results { padding: 2.5rem 1.5rem; }
+            .results-title { font-size: 2rem; }
+            .results-stats { grid-template-columns: 1fr 1fr; }
+            .quiz-actions { padding: 1.2rem 1.5rem 1.8rem; flex-direction: column; gap: 0.8rem; }
+            .quiz-actions .btn { width: 100%; }
+            .opening-quote { font-size: 1.05rem; padding: 1.2rem 1.5rem; }
+            .om-symbol { width: 90px; height: 90px; }
         }
     </style>
 </head>
 
 <body>
 
+    <div class="bg-canvas"></div>
+    <div class="bg-mandala"></div>
+
     <header>
-        <div class="container" style="display:flex;justify-content:space-between;align-items:center;">
+        <div class="container">
             <div class="logo">Arnab <span>Tagore</span></div>
-            <a href="index.html" class="back-link">← Back to Portfolio</a>
+            <a href="index.html" class="back-link">← Return to Portfolio</a>
         </div>
     </header>
 
     <main>
         <div class="container">
-            <!-- Quiz Screen -->
-            <div class="quiz-screen" id="quizScreen">
-                <div class="quiz-container">
-                    <div class="quiz-header">
-                        <h1 class="quiz-title">Yogananda Teachings Quiz</h1>
-                        <p class="quiz-subtitle">Test your knowledge of Paramahansa Yogananda's spiritual teachings</p>
-                    </div>
 
-                    <div class="progress-bar">
-                        <div class="progress-fill" id="progressFill"></div>
-                    </div>
+            <!-- ============ WELCOME SCREEN ============ -->
+            <div class="screen card welcome" id="welcomeScreen">
+                <div class="om-symbol">
+                    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="gold-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#C4944E"/>
+                                <stop offset="100%" stop-color="#E8C078"/>
+                            </linearGradient>
+                        </defs>
+                        <circle cx="50" cy="50" r="46" fill="none" stroke="url(#gold-grad)" stroke-width="1.5" opacity="0.4"/>
+                        <circle cx="50" cy="50" r="38" fill="none" stroke="url(#gold-grad)" stroke-width="0.8" opacity="0.5"/>
+                        <text x="50" y="68" text-anchor="middle" font-family="Cormorant Garamond, serif" font-size="48" fill="url(#gold-grad)" font-weight="500">ॐ</text>
+                    </svg>
+                </div>
+                <div class="welcome-eyebrow">A Contemplative Quiz</div>
+                <h1 class="welcome-title">The Wisdom of<br>Paramahansa Yogananda</h1>
+                <p class="welcome-subtitle">Journey through the teachings of one of the most influential spiritual masters of the modern age — author of <em>Autobiography of a Yogi</em>.</p>
 
-                    <div id="questionNumber" class="question-number"></div>
+                <div class="opening-quote">
+                    The season of failure is the best time for sowing the seeds of success.
+                    <span class="opening-quote-attribution">— Paramahansa Yogananda</span>
+                </div>
+
+                <div class="selector-section">
+                    <div class="selector-label">Choose your path</div>
+                    <div class="difficulty-grid">
+                        <div class="difficulty-option" data-difficulty="seeker">
+                            <div class="difficulty-name">Seeker</div>
+                            <div class="difficulty-desc">8 questions · gentle introduction</div>
+                        </div>
+                        <div class="difficulty-option active" data-difficulty="devotee">
+                            <div class="difficulty-name">Devotee</div>
+                            <div class="difficulty-desc">12 questions · deeper exploration</div>
+                        </div>
+                        <div class="difficulty-option" data-difficulty="yogi">
+                            <div class="difficulty-name">Yogi</div>
+                            <div class="difficulty-desc">15 questions · advanced wisdom</div>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn btn-primary btn-large" id="startBtn">Begin Journey</button>
+            </div>
+
+            <!-- ============ QUIZ SCREEN ============ -->
+            <div class="screen card hidden" id="quizScreen">
+                <div class="quiz-stats">
+                    <div class="stat-block">
+                        <svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+                        </svg>
+                        <div class="stat-info">
+                            <div class="stat-label-small">Score</div>
+                            <div class="stat-value" id="scoreDisplay">0</div>
+                        </div>
+                    </div>
+                    <div class="stat-block">
+                        <span class="streak-flame" id="streakFlame" style="font-size: 1.4rem;">🔥</span>
+                        <div class="stat-info">
+                            <div class="stat-label-small">Streak</div>
+                            <div class="stat-value" id="streakDisplay">0</div>
+                        </div>
+                    </div>
+                    <div class="stat-block">
+                        <svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/>
+                            <polyline points="12 6 12 12 16 14"/>
+                        </svg>
+                        <div class="stat-info">
+                            <div class="stat-label-small">Progress</div>
+                            <div class="stat-value" id="progressDisplay">1 / 12</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+
+                <div class="quiz-body">
+                    <div class="question-meta">
+                        <span class="question-number" id="questionNumber">Question 1</span>
+                        <span class="category-badge" id="categoryBadge">Life & Path</span>
+                    </div>
                     <h2 class="question-text" id="questionText"></h2>
-
                     <div class="options" id="optionsContainer"></div>
+                    <div class="feedback-banner" id="feedbackBanner"></div>
+                </div>
 
-                    <div class="explanation" id="explanation"></div>
-
-                    <div class="button-group">
-                        <button class="btn btn-primary" id="nextBtn" disabled>Next Question</button>
-                    </div>
+                <div class="quiz-actions">
+                    <button class="btn btn-secondary" id="quitBtn">End Journey</button>
+                    <button class="btn btn-primary" id="nextBtn" disabled>Next Question →</button>
                 </div>
             </div>
 
-            <!-- Results Screen -->
-            <div class="results-screen" id="resultsScreen">
-                <div class="quiz-container">
-                    <div class="score-circle">
-                        <div class="score-number" id="finalScore"></div>
-                        <div class="score-label">out of <span id="totalQuestions"></span></div>
+            <!-- ============ RESULTS SCREEN ============ -->
+            <div class="screen card hidden results" id="resultsScreen">
+                <div class="results-rank-symbol" id="rankSymbol"></div>
+                <div class="results-rank" id="rankLabel">Rank Title</div>
+                <h1 class="results-title" id="resultsTitle">Title</h1>
+                <p class="results-message" id="resultsMessage">Message</p>
+
+                <div class="results-stats">
+                    <div class="results-stat">
+                        <div class="results-stat-number" id="finalScore">0</div>
+                        <div class="results-stat-label">Total Points</div>
                     </div>
-
-                    <h1 class="results-title" id="resultsTitle"></h1>
-                    <p class="results-message" id="resultsMessage"></p>
-
-                    <div class="results-details">
-                        <div class="results-stat">
-                            <div class="results-stat-number" id="percentageScore"></div>
-                            <div class="results-stat-label">Accuracy</div>
-                        </div>
-                        <div class="results-stat">
-                            <div class="results-stat-number" id="correctCount"></div>
-                            <div class="results-stat-label">Questions Correct</div>
-                        </div>
+                    <div class="results-stat">
+                        <div class="results-stat-number" id="finalAccuracy">0%</div>
+                        <div class="results-stat-label">Accuracy</div>
                     </div>
-
-                    <div class="button-group">
-                        <button class="btn btn-primary" onclick="location.reload()">Retake Quiz</button>
-                        <a href="index.html" class="btn btn-secondary">Return to Portfolio</a>
+                    <div class="results-stat">
+                        <div class="results-stat-number" id="finalCorrect">0</div>
+                        <div class="results-stat-label">Correct</div>
+                    </div>
+                    <div class="results-stat">
+                        <div class="results-stat-number" id="finalStreak">0</div>
+                        <div class="results-stat-label">Best Streak</div>
                     </div>
                 </div>
+
+                <div class="results-quote" id="resultsQuote">
+                    <span id="resultsQuoteText"></span>
+                    <span class="results-quote-attribution">— Paramahansa Yogananda</span>
+                </div>
+
+                <div class="results-actions">
+                    <button class="btn btn-primary" id="retakeBtn">Begin New Journey</button>
+                    <a href="index.html" class="btn btn-secondary">Return to Portfolio</a>
+                </div>
             </div>
+
         </div>
     </main>
 
@@ -487,234 +953,522 @@
     </footer>
 
     <script>
-        const quizData = [
+        // ============ QUESTION BANK ============
+        const QUESTIONS = [
+            // LIFE & PATH
             {
-                question: "What is the central teaching of Paramahansa Yogananda's \"Autobiography of a Yogi\"?",
-                options: [
-                    "The path to self-realization through meditation and yoga",
-                    "How to achieve material wealth and success",
-                    "Political revolution and social reform",
-                    "The history of Indian politics"
-                ],
+                category: "Life & Path",
+                question: "In what year did Paramahansa Yogananda first arrive in the United States?",
+                options: ["1893", "1920", "1935", "1946"],
+                correct: 1,
+                explanation: "Yogananda arrived in Boston in 1920 to address the International Congress of Religious Liberals, becoming one of the first Indian masters to live and teach extensively in the West.",
+                quote: "I came to America to share India's spiritual treasure of self-realization with the West.",
+                difficulty: ["devotee", "yogi"]
+            },
+            {
+                category: "Life & Path",
+                question: "Which book by Yogananda became one of the most influential spiritual works of the 20th century?",
+                options: ["The Holy Science", "Whispers from Eternity", "Autobiography of a Yogi", "Man's Eternal Quest"],
+                correct: 2,
+                explanation: "Published in 1946, 'Autobiography of a Yogi' has been translated into over 50 languages and was reportedly the only book Steve Jobs kept on his iPad — read each year as part of his personal practice.",
+                quote: "An ideal book for stilling the mind and lifting the spirit beyond the world's confusions.",
+                difficulty: ["seeker", "devotee", "yogi"]
+            },
+            {
+                category: "Life & Path",
+                question: "Who was Yogananda's revered guru, whose lineage he carried to the West?",
+                options: ["Lahiri Mahasaya", "Sri Yukteswar Giri", "Mahavatar Babaji", "Ramakrishna Paramahansa"],
+                correct: 1,
+                explanation: "Sri Yukteswar Giri was Yogananda's direct guru. The lineage extended back through Lahiri Mahasaya to the legendary deathless master Mahavatar Babaji, who reportedly directed Yogananda's mission to the West.",
+                quote: "My guru taught me to seek truth — not through belief, but through inner experience.",
+                difficulty: ["devotee", "yogi"]
+            },
+            {
+                category: "Life & Path",
+                question: "What organization did Yogananda found in 1920 to disseminate his teachings?",
+                options: ["Vedanta Society", "Self-Realization Fellowship", "Theosophical Society", "Ramakrishna Mission"],
+                correct: 1,
+                explanation: "Self-Realization Fellowship (SRF), with its sister organization Yogoda Satsanga Society in India, continues to publish his writings and teach his Kriya Yoga lessons worldwide today.",
+                quote: "I have founded this work to give to the world a definite technique to commune directly with God.",
+                difficulty: ["seeker", "devotee", "yogi"]
+            },
+            {
+                category: "Life & Path",
+                question: "What was Yogananda's birth name before he took monastic vows?",
+                options: ["Mukunda Lal Ghosh", "Gopal Chandra Mukherjee", "Swami Premananda", "Yogendra Nath"],
                 correct: 0,
-                explanation: "Yogananda's \"Autobiography of a Yogi\" is a spiritual classic that teaches self-realization as the ultimate goal of human existence through meditation, yoga, and devotion to God."
+                explanation: "Born in Gorakhpur, India in 1893 as Mukunda Lal Ghosh, he received the monastic name 'Yogananda' (bliss through divine union) when initiated into the swami order by Sri Yukteswar.",
+                difficulty: ["yogi"]
+            },
+
+            // KRIYA YOGA & MEDITATION
+            {
+                category: "Kriya Yoga",
+                question: "What is the central meditation technique that Yogananda taught?",
+                options: ["Vipassana", "Kriya Yoga", "Transcendental Meditation", "Zazen"],
+                correct: 1,
+                explanation: "Kriya Yoga is an ancient pranayama-based technique that Yogananda described as a 'scientific' method to accelerate spiritual evolution by harmonizing breath, mind, and life-force.",
+                quote: "Kriya Yoga is the real 'fire ceremony' often extolled in the Bhagavad Gita.",
+                difficulty: ["seeker", "devotee", "yogi"]
             },
             {
-                question: "According to Yogananda, what is the primary purpose of Kriya Yoga?",
+                category: "Kriya Yoga",
+                question: "According to Yogananda, what does Kriya Yoga primarily work with?",
+                options: ["Physical postures only", "Life force (prana) and breath", "Chanting alone", "Visualization only"],
+                correct: 1,
+                explanation: "Kriya works directly with prana (life-force) and the breath to magnetize the spine and quiet the heart, enabling the meditator to perceive the divine current within.",
+                difficulty: ["devotee", "yogi"]
+            },
+            {
+                category: "Kriya Yoga",
+                question: "Yogananda taught that one Kriya was equivalent to how much natural spiritual evolution?",
+                options: ["One day", "One month", "One year of normal evolution", "Ten years"],
+                correct: 2,
+                explanation: "Yogananda famously taught (echoing his guru lineage) that 'one Kriya' equals one solar year of natural spiritual evolution — emphasizing the technique's accelerating effect.",
+                quote: "A half minute of Kriya equals one year of natural spiritual unfoldment.",
+                difficulty: ["yogi"]
+            },
+            {
+                category: "Kriya Yoga",
+                question: "Where in the body did Yogananda emphasize concentration during meditation?",
+                options: ["The heart only", "The Kutastha — the point between the eyebrows", "The base of the spine", "The crown of the head only"],
+                correct: 1,
+                explanation: "The Kutastha or 'spiritual eye' between the eyebrows is, in Yogananda's teachings, the seat of single-pointed awareness and the doorway through which the soul perceives divine light.",
+                quote: "When thy eye becomes single, thy whole body shall be full of light.",
+                difficulty: ["devotee", "yogi"]
+            },
+
+            // PHILOSOPHY & SELF-REALIZATION
+            {
+                category: "Self-Realization",
+                question: "How did Yogananda define 'Self-realization'?",
                 options: [
-                    "To build physical strength and flexibility",
-                    "To accelerate spiritual evolution and unite the soul with God",
-                    "To develop intellectual abilities",
-                    "To increase earning potential"
+                    "The achievement of fame and success",
+                    "The knowing — in body, mind, and soul — that we are one with the omnipresence of God",
+                    "Mastering all yoga postures",
+                    "Reading every spiritual scripture"
                 ],
                 correct: 1,
-                explanation: "Yogananda taught that Kriya Yoga is an ancient meditation technique that accelerates spiritual progress by harmonizing the body, mind, and soul."
+                explanation: "Yogananda's exact definition: 'Self-realization is the knowing — in body, mind, and soul — that we are one with the omnipresence of God; that we do not have to pray that it come to us, that we are not merely near it at all times, but that God's omnipresence is our omnipresence.'",
+                quote: "You do not have to struggle to reach God, but you do have to struggle to tear away the self-created veil that hides Him from you.",
+                difficulty: ["seeker", "devotee", "yogi"]
             },
             {
-                question: "What did Yogananda teach about the nature of God?",
+                category: "Self-Realization",
+                question: "What did Yogananda call the cosmic delusion that veils reality?",
+                options: ["Karma", "Maya", "Samsara", "Avidya"],
+                correct: 1,
+                explanation: "Maya is the cosmic illusion that makes the One appear as the many. Yogananda taught that the spiritual path is essentially the gradual lifting of Maya through devotion, meditation, and right action.",
+                quote: "The world is the Lord's drama, and we are the players. Maya is the magician who makes us forget.",
+                difficulty: ["devotee", "yogi"]
+            },
+            {
+                category: "Self-Realization",
+                question: "According to Yogananda, what is the true source of lasting happiness?",
                 options: [
-                    "God exists only in churches and temples",
-                    "God is impersonal and distant",
-                    "God is omnipresent, omnipotent, and can be experienced directly through meditation",
-                    "God does not exist"
+                    "Wealth and material comfort",
+                    "Approval from others",
+                    "Inner contact with divine joy through meditation",
+                    "Constant pleasurable experiences"
                 ],
                 correct: 2,
-                explanation: "Yogananda taught that God is an infinite, all-pervading consciousness that exists within every being and can be directly experienced through sincere meditation and spiritual practice."
+                explanation: "Yogananda taught that bliss is our natural state, hidden by restless thoughts. Meditation calms the mind so we may discover the ever-new joy that is the soul's essence.",
+                quote: "Be as simple as you can be; you will be astonished to see how uncomplicated and happy your life can become.",
+                difficulty: ["seeker", "devotee", "yogi"]
+            },
+
+            // UNIVERSAL TEACHINGS
+            {
+                category: "Universal Teaching",
+                question: "What did Yogananda teach about the relationship between Christ and Krishna?",
+                options: [
+                    "They taught contradicting truths",
+                    "Christ was superior to Krishna",
+                    "They expressed the same eternal truth in different ages and cultures",
+                    "Only one was a true master"
+                ],
+                correct: 2,
+                explanation: "Yogananda devoted decades to commentaries on both the Bhagavad Gita and the New Testament, demonstrating that 'Christ Consciousness' and 'Krishna Consciousness' are two names for the same universal divine intelligence.",
+                quote: "The second coming of Christ is the resurrection of the infinite Christ Consciousness within you.",
+                difficulty: ["seeker", "devotee", "yogi"]
             },
             {
-                question: "What is the concept of \"Self-realization\" according to Yogananda?",
+                category: "Universal Teaching",
+                question: "How did Yogananda view the relationship between science and religion?",
                 options: [
-                    "Becoming famous and successful",
-                    "Understanding one's true divine nature and unity with God",
-                    "Achieving material possessions",
-                    "Reaching a high position in society"
+                    "They are forever opposed",
+                    "Religion should reject science",
+                    "True religion is the science of God-realization, verifiable through inner experiment",
+                    "Science replaces the need for religion"
+                ],
+                correct: 2,
+                explanation: "Yogananda was a pioneer in framing yoga as a 'science' — a systematic, repeatable method whose truths must be tested in the laboratory of one's own consciousness.",
+                quote: "Yoga is the scientific method by which a soul may be reunited with Spirit.",
+                difficulty: ["devotee", "yogi"]
+            },
+            {
+                category: "Universal Teaching",
+                question: "Yogananda taught that all true masters of all religions are united in what?",
+                options: [
+                    "Their writings",
+                    "Their cultural background",
+                    "The same direct experience of God",
+                    "Their organizational hierarchy"
+                ],
+                correct: 2,
+                explanation: "He emphasized that masters across traditions — Krishna, Buddha, Christ, Mohammed, Lahiri Mahasaya — drank from the same source of divine experience, though they expressed it through different cultural forms.",
+                quote: "All paths, when followed sincerely, lead to the same goal: union with the One.",
+                difficulty: ["seeker", "devotee", "yogi"]
+            },
+
+            // PRACTICAL WISDOM
+            {
+                category: "Practical Wisdom",
+                question: "What did Yogananda recommend as the proper attitude toward work and duty?",
+                options: [
+                    "Avoid work whenever possible",
+                    "Work tirelessly only for personal gain",
+                    "Perform duty with full energy but without attachment to results",
+                    "Do only spiritual work"
+                ],
+                correct: 2,
+                explanation: "Drawing from the Bhagavad Gita, Yogananda taught Karma Yoga: act with full skill and devotion, but offer the fruits of action to God. This frees the mind from worry while sustaining excellence.",
+                quote: "Be active, but not restless. Be calmly active, and actively calm.",
+                difficulty: ["seeker", "devotee", "yogi"]
+            },
+            {
+                category: "Practical Wisdom",
+                question: "How did Yogananda describe the role of will power?",
+                options: [
+                    "It is unimportant in spiritual life",
+                    "Will is the dynamic force that connects us to divine energy",
+                    "Will is opposed to surrender",
+                    "Only saints need will power"
                 ],
                 correct: 1,
-                explanation: "Self-realization is the direct experiential knowledge of one's true identity as the eternal, divine soul—one with God. It transcends ego and worldly attachments."
+                explanation: "Yogananda taught: 'Will is the offspring of consciousness.' Conscious will, applied with attention, draws cosmic energy into the body — the foundation of his Energization Exercises.",
+                quote: "The greater the will, the greater the flow of energy.",
+                difficulty: ["devotee", "yogi"]
             },
             {
-                question: "Which ancient scripture did Yogananda frequently reference in his teachings?",
+                category: "Practical Wisdom",
+                question: "What did Yogananda teach is the antidote to fear?",
+                options: ["Avoidance", "Aggression", "Knowledge of one's true Self as immortal soul", "Distraction"],
+                correct: 2,
+                explanation: "All fear, Yogananda taught, stems from identifying with the body. The remembrance — 'I am the immortal soul, untouched by birth and death' — dissolves fear at its root.",
+                quote: "Fear is not your real nature. Your real nature is fearless and free.",
+                difficulty: ["seeker", "devotee", "yogi"]
+            },
+            {
+                category: "Practical Wisdom",
+                question: "What is the proper foundation of friendship according to Yogananda?",
                 options: [
-                    "The Bible only",
-                    "The Quran only",
-                    "The Bhagavad Gita and other Hindu scriptures",
-                    "Only modern philosophy texts"
+                    "Mutual benefit and exchange",
+                    "Common interests only",
+                    "Unconditional love and the recognition of the divine in the other",
+                    "Shared social status"
                 ],
                 correct: 2,
-                explanation: "Yogananda was deeply rooted in Hindu spirituality and frequently taught from the Bhagavad Gita, Yoga Sutras, and Upanishads, showing their universal spiritual truths."
+                explanation: "Yogananda taught that true friendship is a 'divine relationship' — uncalculating, freeing, and mutually awakening. It is one of the noblest soul-qualities a human being can cultivate.",
+                quote: "Friendship is the manifestation of God's love for you, expressed through your friends.",
+                difficulty: ["devotee", "yogi"]
             },
+
+            // FAMOUS QUOTES
             {
-                question: "What does Yogananda teach about the relationship between mind and body?",
-                options: [
-                    "They are completely separate entities",
-                    "The body controls the mind",
-                    "The mind controls the body; thoughts shape reality",
-                    "They are unrelated to spiritual growth"
-                ],
-                correct: 2,
-                explanation: "Yogananda taught that the mind is the creator of the body's conditions. Through positive thoughts and meditation, one can heal the body and transform one's reality."
-            },
-            {
-                question: "What is the core purpose of meditation in Yogananda's teachings?",
-                options: [
-                    "To escape reality",
-                    "To contact the divine presence within and experience God's love",
-                    "To achieve material success",
-                    "To develop supernatural powers"
-                ],
+                category: "Famous Sayings",
+                question: "Complete the famous Yogananda quote: 'The season of failure is the best time for ___'",
+                options: ["forgetting and moving on", "sowing the seeds of success", "blaming others", "abandoning the path"],
                 correct: 1,
-                explanation: "Meditation in Yogananda's system is a direct means of contacting the presence of God within, experiencing divine love, and achieving inner peace and spiritual insight."
+                explanation: "This is one of Yogananda's most beloved aphorisms — reframing failure not as defeat but as the fertile ground from which new growth emerges.",
+                difficulty: ["seeker", "devotee", "yogi"]
             },
             {
-                question: "How did Yogananda describe the nature of ego?",
-                options: [
-                    "Ego is a sign of strength and self-respect",
-                    "Ego is an illusion that separates us from God and causes suffering",
-                    "Ego is essential for survival",
-                    "Ego is the same as having healthy self-esteem"
-                ],
+                category: "Famous Sayings",
+                question: "Yogananda said: 'Change yourself and you have done your part in changing ___'",
+                options: ["your family", "the world", "your destiny", "your karma"],
                 correct: 1,
-                explanation: "Yogananda taught that the ego or false sense of separate self is the root cause of ignorance and suffering. Transcending ego through meditation leads to unity with God."
+                explanation: "This teaching reflects Yogananda's view that true social transformation begins with inner transformation — a single awakened soul radiates harmony into the entire collective field.",
+                difficulty: ["devotee", "yogi"]
             },
             {
-                question: "What principle did Yogananda emphasize regarding service and devotion?",
+                category: "Famous Sayings",
+                question: "Which Yogananda quote describes the nature of joy?",
                 options: [
-                    "Service to others is a burden to avoid",
-                    "Only personal spiritual practice matters",
-                    "Service to others is service to God; love through action is devotion",
-                    "Financial success is the highest form of devotion"
+                    "Joy is found in possessions",
+                    "Joy must be earned through suffering",
+                    "Be happy in the moment, that is enough — each moment is all we need, not more",
+                    "Joy depends on circumstances"
                 ],
                 correct: 2,
-                explanation: "Yogananda taught that selfless service and love in action are pathways to God. Serving others with love is serving the divine in all beings."
+                explanation: "Yogananda's teaching emphasized present-moment awareness as the gateway to joy. The mind is happy not because of what it has, but because of what it has stopped grasping.",
+                difficulty: ["devotee", "yogi"]
             },
-            {
-                question: "According to Yogananda, what is the relationship between all religions?",
-                options: [
-                    "Only one religion is true",
-                    "All religions are false",
-                    "All true religions lead to the same God-realization; they are different paths up the same mountain",
-                    "Religions are only for historical purposes"
-                ],
-                correct: 2,
-                explanation: "Yogananda was a bridge between East and West, teaching that all sincere spiritual paths lead to the same ultimate reality—the experience of God's presence and unity with all life."
-            }
         ];
 
-        let currentQuestion = 0;
-        let score = 0;
-        let selectedAnswer = null;
-        let answeredQuestions = 0;
+        // ============ STATE ============
+        let state = {
+            difficulty: "devotee",
+            questions: [],
+            currentIndex: 0,
+            score: 0,
+            correct: 0,
+            streak: 0,
+            bestStreak: 0,
+            answered: false,
+        };
 
-        function startQuiz() {
-            displayQuestion();
-        }
+        const QUESTION_COUNTS = { seeker: 8, devotee: 12, yogi: 15 };
 
-        function displayQuestion() {
-            const question = quizData[currentQuestion];
-            const quizScreen = document.getElementById('quizScreen');
-            const resultsScreen = document.getElementById('resultsScreen');
+        // ============ DOM ============
+        const $ = (id) => document.getElementById(id);
 
-            quizScreen.classList.remove('hidden');
-            resultsScreen.classList.remove('show');
-
-            document.getElementById('questionNumber').textContent = `Question ${currentQuestion + 1} of ${quizData.length}`;
-            document.getElementById('questionText').textContent = question.question;
-
-            const progressPercent = ((currentQuestion + 1) / quizData.length) * 100;
-            document.getElementById('progressFill').style.width = progressPercent + '%';
-
-            const optionsContainer = document.getElementById('optionsContainer');
-            optionsContainer.innerHTML = '';
-
-            question.options.forEach((option, index) => {
-                const optionDiv = document.createElement('div');
-                optionDiv.className = 'option';
-                optionDiv.textContent = option;
-                optionDiv.addEventListener('click', () => selectAnswer(index));
-                optionsContainer.appendChild(optionDiv);
+        // ============ WELCOME ============
+        document.querySelectorAll('.difficulty-option').forEach(el => {
+            el.addEventListener('click', () => {
+                document.querySelectorAll('.difficulty-option').forEach(o => o.classList.remove('active'));
+                el.classList.add('active');
+                state.difficulty = el.dataset.difficulty;
             });
+        });
 
-            document.getElementById('explanation').classList.remove('show');
-            document.getElementById('nextBtn').disabled = true;
-            selectedAnswer = null;
-        }
-
-        function selectAnswer(index) {
-            if (selectedAnswer !== null) return;
-
-            selectedAnswer = index;
-            const options = document.querySelectorAll('.option');
-            const question = quizData[currentQuestion];
-
-            options.forEach((option, i) => {
-                option.classList.add('disabled');
-                if (i === question.correct) {
-                    option.classList.add('correct');
-                    option.innerHTML += '<div class="option-feedback">✓ Correct</div>';
-                } else if (i === index && index !== question.correct) {
-                    option.classList.add('incorrect');
-                    option.innerHTML += '<div class="option-feedback">✗ Incorrect</div>';
-                }
-            });
-
-            if (index === question.correct) {
-                score++;
+        $('startBtn').addEventListener('click', startQuiz);
+        $('retakeBtn').addEventListener('click', resetToWelcome);
+        $('quitBtn').addEventListener('click', () => {
+            if (confirm('End the journey now? Your progress will be summarized.')) {
+                showResults();
             }
-            answeredQuestions++;
+        });
+        $('nextBtn').addEventListener('click', nextQuestion);
 
-            document.getElementById('explanation').textContent = question.explanation;
-            document.getElementById('explanation').classList.add('show');
-            document.getElementById('nextBtn').disabled = false;
+        // ============ QUIZ FLOW ============
+        function startQuiz() {
+            const pool = QUESTIONS.filter(q => q.difficulty.includes(state.difficulty));
+            const shuffled = shuffle([...pool]);
+            const count = QUESTION_COUNTS[state.difficulty];
+            state.questions = shuffled.slice(0, count);
+            state.currentIndex = 0;
+            state.score = 0;
+            state.correct = 0;
+            state.streak = 0;
+            state.bestStreak = 0;
+
+            $('welcomeScreen').classList.add('hidden');
+            $('resultsScreen').classList.add('hidden');
+            $('quizScreen').classList.remove('hidden');
+            renderQuestion();
+        }
+
+        function shuffle(arr) {
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        function renderQuestion() {
+            state.answered = false;
+            const q = state.questions[state.currentIndex];
+            const total = state.questions.length;
+
+            $('questionNumber').textContent = `Question ${state.currentIndex + 1}`;
+            $('categoryBadge').textContent = q.category;
+            $('questionText').textContent = q.question;
+            $('progressDisplay').textContent = `${state.currentIndex + 1} / ${total}`;
+            $('progressFill').style.width = `${((state.currentIndex) / total) * 100}%`;
+            $('scoreDisplay').textContent = state.score;
+            $('streakDisplay').textContent = state.streak;
+            $('streakFlame').classList.toggle('active', state.streak >= 2);
+
+            const container = $('optionsContainer');
+            container.innerHTML = '';
+            const letters = ['A', 'B', 'C', 'D'];
+            q.options.forEach((opt, idx) => {
+                const div = document.createElement('div');
+                div.className = 'option';
+                div.innerHTML = `<div class="option-letter">${letters[idx]}</div><div class="option-text"></div>`;
+                div.querySelector('.option-text').textContent = opt;
+                div.addEventListener('click', () => selectAnswer(idx, div));
+                container.appendChild(div);
+            });
+
+            $('feedbackBanner').classList.remove('show', 'correct', 'incorrect');
+            $('feedbackBanner').innerHTML = '';
+            $('nextBtn').disabled = true;
+            $('nextBtn').textContent = state.currentIndex === total - 1 ? 'See Results →' : 'Next Question →';
+        }
+
+        function selectAnswer(idx, el) {
+            if (state.answered) return;
+            state.answered = true;
+            const q = state.questions[state.currentIndex];
+            const isCorrect = idx === q.correct;
+
+            const options = document.querySelectorAll('.option');
+            options.forEach((opt, i) => {
+                opt.classList.add('disabled');
+                if (i === q.correct) opt.classList.add('correct');
+                else if (i === idx) opt.classList.add('incorrect');
+                else opt.classList.add('dimmed');
+            });
+
+            let pointsEarned = 0;
+            if (isCorrect) {
+                state.streak += 1;
+                state.bestStreak = Math.max(state.bestStreak, state.streak);
+                state.correct += 1;
+                const base = 100;
+                const streakBonus = Math.min(state.streak - 1, 5) * 20;
+                pointsEarned = base + streakBonus;
+                state.score += pointsEarned;
+                showPointsPopup(el, `+${pointsEarned}`);
+            } else {
+                state.streak = 0;
+            }
+
+            $('scoreDisplay').textContent = state.score;
+            $('streakDisplay').textContent = state.streak;
+            $('streakFlame').classList.toggle('active', state.streak >= 2);
+
+            renderFeedback(q, isCorrect, pointsEarned);
+            $('nextBtn').disabled = false;
+            $('progressFill').style.width = `${((state.currentIndex + 1) / state.questions.length) * 100}%`;
+        }
+
+        function renderFeedback(q, isCorrect, points) {
+            const banner = $('feedbackBanner');
+            banner.className = `feedback-banner show ${isCorrect ? 'correct' : 'incorrect'}`;
+            const title = isCorrect ? '✓ Correct' : '✗ Not quite';
+            const pointsLine = isCorrect
+                ? `+${points} points${state.streak >= 2 ? ` · ${state.streak} in a row` : ''}`
+                : 'The path of learning continues';
+            const quoteHtml = q.quote
+                ? `<div class="feedback-quote">${q.quote}<span class="feedback-attribution">— Paramahansa Yogananda</span></div>`
+                : '';
+            banner.innerHTML = `
+                <div class="feedback-title">${title}</div>
+                <div class="feedback-points">${pointsLine}</div>
+                <div class="feedback-explanation">${q.explanation}</div>
+                ${quoteHtml}
+            `;
+        }
+
+        function showPointsPopup(el, text) {
+            const popup = document.createElement('div');
+            popup.className = 'points-popup';
+            popup.textContent = text;
+            const rect = el.getBoundingClientRect();
+            const parentRect = el.parentElement.getBoundingClientRect();
+            popup.style.left = `${rect.right - parentRect.left - 30}px`;
+            popup.style.top = `${rect.top - parentRect.top + 10}px`;
+            el.parentElement.appendChild(popup);
+            setTimeout(() => popup.remove(), 1500);
         }
 
         function nextQuestion() {
-            currentQuestion++;
-            if (currentQuestion < quizData.length) {
-                displayQuestion();
+            if (state.currentIndex < state.questions.length - 1) {
+                state.currentIndex += 1;
+                renderQuestion();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
             } else {
-                displayResults();
+                showResults();
             }
         }
 
-        function displayResults() {
-            document.getElementById('quizScreen').classList.add('hidden');
-            document.getElementById('resultsScreen').classList.add('show');
+        // ============ RESULTS ============
+        function showResults() {
+            $('quizScreen').classList.add('hidden');
+            $('resultsScreen').classList.remove('hidden');
 
-            const percentage = Math.round((score / quizData.length) * 100);
-            const totalQuestions = quizData.length;
+            const total = state.questions.length;
+            const accuracy = total > 0 ? Math.round((state.correct / total) * 100) : 0;
 
-            document.getElementById('finalScore').textContent = score;
-            document.getElementById('totalQuestions').textContent = totalQuestions;
-            document.getElementById('percentageScore').textContent = percentage + '%';
-            document.getElementById('correctCount').textContent = score;
+            $('finalScore').textContent = state.score.toLocaleString();
+            $('finalAccuracy').textContent = `${accuracy}%`;
+            $('finalCorrect').textContent = `${state.correct}/${total}`;
+            $('finalStreak').textContent = state.bestStreak;
 
-            let title = '';
-            let message = '';
+            const rank = getRank(accuracy);
+            $('rankSymbol').innerHTML = rank.symbol;
+            $('rankLabel').textContent = rank.label;
+            $('resultsTitle').textContent = rank.title;
+            $('resultsMessage').textContent = rank.message;
+            $('resultsQuoteText').textContent = rank.quote;
 
-            if (percentage === 100) {
-                title = 'Perfect Score!';
-                message = 'You have mastered the teachings of Yogananda. Your dedication to understanding his wisdom is truly commendable.';
-            } else if (percentage >= 80) {
-                title = 'Excellent Understanding';
-                message = 'You demonstrate a strong grasp of Yogananda\'s core teachings. Continue to deepen your spiritual practice.';
-            } else if (percentage >= 60) {
-                title = 'Good Progress';
-                message = 'You have a solid foundation in Yogananda\'s teachings. Reflect on the areas where you can deepen your knowledge.';
-            } else if (percentage >= 40) {
-                title = 'Keep Learning';
-                message = 'You\'re on your spiritual journey. Explore Yogananda\'s "Autobiography of a Yogi" and his teachings more deeply.';
-            } else {
-                title = 'Just Beginning';
-                message = 'Your spiritual quest is just starting. I encourage you to study Yogananda\'s wisdom with an open heart.';
-            }
-
-            document.getElementById('resultsTitle').textContent = title;
-            document.getElementById('resultsMessage').textContent = message;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        document.getElementById('nextBtn').addEventListener('click', nextQuestion);
+        function getRank(acc) {
+            if (acc === 100) return {
+                label: "Highest Attainment",
+                title: "Realized Soul",
+                message: "Your knowledge of Yogananda's teachings is profound. May the wisdom you have studied become living reality through daily practice.",
+                quote: "The wave is the same as the ocean, though it is not the whole ocean. So each wave of creation is a part of the eternal Ocean of Spirit.",
+                symbol: rankSymbol("realized"),
+            };
+            if (acc >= 85) return {
+                label: "Master of the Path",
+                title: "Devoted Yogi",
+                message: "You have walked deeply with Yogananda's teachings. The clarity of your understanding suggests genuine reflection — not just memorization.",
+                quote: "When you know who you are, you know everyone else, because all are one in Spirit.",
+                symbol: rankSymbol("yogi"),
+            };
+            if (acc >= 70) return {
+                label: "Earnest Devotee",
+                title: "Sincere Seeker",
+                message: "Your understanding is solid and growing. Continue to read, meditate, and live the teachings — the path opens to those who walk it daily.",
+                quote: "Make haste slowly. Climb steadily, but each step must be sure.",
+                symbol: rankSymbol("devotee"),
+            };
+            if (acc >= 50) return {
+                label: "Awakening Seeker",
+                title: "On the Threshold",
+                message: "You have begun to grasp the contours of Yogananda's vision. Each return to these teachings will bring deeper recognition.",
+                quote: "The soul loves to meditate, for in contact with the Spirit lies its greatest joy.",
+                symbol: rankSymbol("awakening"),
+            };
+            return {
+                label: "First Steps",
+                title: "Beginning the Journey",
+                message: "Every master began as a beginner. Yogananda's 'Autobiography of a Yogi' is the perfect doorway — let it be your invitation to discover more.",
+                quote: "Just as the purpose of eating is to satisfy hunger, so the purpose of life is to satisfy the soul's longing for joy.",
+                symbol: rankSymbol("beginner"),
+            };
+        }
 
-        startQuiz();
+        function rankSymbol(rank) {
+            const colors = {
+                realized: ["#C4944E", "#E8C078"],
+                yogi: ["#C4944E", "#D4A574"],
+                devotee: ["#1B3A6B", "#7DB3D1"],
+                awakening: ["#7DB3D1", "#9CC6DD"],
+                beginner: ["#6B7B8D", "#A0AEC0"],
+            };
+            const [c1, c2] = colors[rank];
+            return `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="rg-${rank}" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="${c1}"/>
+                        <stop offset="100%" stop-color="${c2}"/>
+                    </linearGradient>
+                </defs>
+                <circle cx="50" cy="50" r="46" fill="none" stroke="url(#rg-${rank})" stroke-width="1.5" opacity="0.5"/>
+                <circle cx="50" cy="50" r="36" fill="none" stroke="url(#rg-${rank})" stroke-width="1" opacity="0.7"/>
+                <g transform="translate(50,50)">
+                    ${[0, 60, 120, 180, 240, 300].map(a =>
+                        `<ellipse cx="0" cy="-22" rx="6" ry="14" fill="url(#rg-${rank})" opacity="0.55" transform="rotate(${a})"/>`
+                    ).join('')}
+                </g>
+                <circle cx="50" cy="50" r="8" fill="url(#rg-${rank})"/>
+            </svg>`;
+        }
+
+        function resetToWelcome() {
+            $('resultsScreen').classList.add('hidden');
+            $('welcomeScreen').classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
     </script>
 
 </body>
